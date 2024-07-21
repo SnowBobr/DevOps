@@ -409,3 +409,72 @@ ACCESS files and folders
             cat TESTFILE kurwa_bobra > test_messages  2>&1
 
 
+Установка  web-сервера  Apach
+
+    устанавливаем пакет с зависимостями
+
+        yum -y install httpd
+
+    проверяем статус службы
+
+        systemctl status httpd
+
+        выглядит вот так:
+
+            ○ httpd.service - The Apache HTTP Server
+            Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; preset: disabled)
+            Active: inactive (dead)
+            Docs: man:httpd.service(8)
+
+    запускаем сервис
+
+        systemctl start httpd
+
+        выглядит вот так:
+
+            ● httpd.service - The Apache HTTP Server
+                    Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; preset: disabled)
+                    Active: active (running) since Thu 2024-07-18 02:26:50 CEST; 6s ago
+                    Docs: man:httpd.service(8)
+                Main PID: 4193 (httpd)
+                    Status: "Started, listening on: port 80"
+                    Tasks: 177 (limit: 10963)
+                    Memory: 30.2M
+                        CPU: 262ms
+                    CGroup: /system.slice/httpd.service
+                            ├─4193 /usr/sbin/httpd -DFOREGROUND
+                            ├─4194 /usr/sbin/httpd -DFOREGROUND
+                            ├─4195 /usr/sbin/httpd -DFOREGROUND
+                            ├─4196 /usr/sbin/httpd -DFOREGROUND
+                            └─4197 /usr/sbin/httpd -DFOREGROUND
+
+
+    расположение файла с конфигом сервера находиться в - /etc/httpd//conf/httpd.conf
+    в конфиге можно поменять порты, каталог где находиться сайт, и даже закрыть доступ к сайту
+
+
+    отправляем запрос на наш сервер, можно вписать как ip так и имя (-I - вывести только заголовки):
+
+        curl -I localhost
+
+        получаем ответ:
+
+            HTTP/1.1 403 Forbidden
+            Date: Thu, 18 Jul 2024 00:36:20 GMT
+            Server: Apache/2.4.57 (CentOS Stream)
+            Last-Modified: Tue, 04 Jun 2024 22:57:12 GMT
+            ETag: "296919-61a185ec88200"
+            Accept-Ranges: bytes
+            Content-Length: 2713881
+            Content-Type: text/html; charset=UTF-8
+
+        в данном случае доступ запрещен и нужен проброс портов
+        делаем это в настройках виртуальной машины
+    
+    все хосты на машине расположенны в --  /etc/hosts
+
+        для того что бы протестировать как будет работать система на новом хосте, там нужно добавить 
+        новый хост и доменное имя и тогда можно спокойно проверять веб сервер на работоспособность
+        таким образом мы исключаем маршрутизацию dns и напрямую работаем
+
+
