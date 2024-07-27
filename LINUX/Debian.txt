@@ -347,5 +347,46 @@ VIM
         groupdel  --  удаляет группу
 
 
+USER access
+
+    strukture:
+        -rwxrwxrwx  --  
+            1. -  --  text file
+               d  --  directory
+               b  --  binary file (executable)
+               l  --  link (soft link)
+
+
+            2. rwx - read/write/execute (file owner)
+            3. rwx | or | r-- | or | --x | (file owner group)
+            4. rwx | or | r-- | or | --x | (all)
+            
+    change user access:
+
+        числовой єквивалент текстовому значению прав доступа (что бы получить совокупность прав, числа суммируются)
+        r - 4 | w - 2 | x - 1
+
+        построение числового значения стандартных прав доступа
+        0 (простой файл)/7(права для владельца)/4(права для групы владельца)/1(права для всех остальных) - 0741
+
+        chmode 0741 {destination file} 
+
+        chmode -c 0741 {destination file}  --  show what the access changes complite
+
+        chmode u=r,g=r,a=r {destination file}  --  формат буквенной записи прав доступа, непопулярен, согласен
+
+        следует помнить что права на выполнение (execute) на текстовые файлы предоставлять не стоит, только
+        бинарники и каталоги
+
+
+GROUP access
+
+    comands:
+
+        chmod -R 777 {directory}  --  рекурсивно предоставит максимальніе права доступа каталогу и всем вложенным файлам
+                                        если сменить числа, естественно сменяться и права доступа 
+
+
+
 
 
