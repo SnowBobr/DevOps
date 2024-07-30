@@ -46,5 +46,24 @@ DHCP
 
     файл конфигурации  --  /etc/default/isc-dhcp-server
 
+        настройки:
+
+            раскоментировать строки с DHCPDv4
+            INTERFACESv4 - заполняем
+    
+    файл конфигурации  --  /etc/dhcp/dhcpd.conf
+
+        настройки:
+
+            option domain-name-servers {тут разная лабуда, меняем на нужный нам ip - 192.168.1.100}
+
+
+            subnet declaration  -- раскоментируем (строки: subnet, range, {)
+            subnet 192.168.1.0 netmask 255.255.255.0 {
+                athoritative;  --  покажет устройствам в сети что это основной dhcp сервер
+                range 192.168.1.50 192.168.1.99  --  диапазон выделяемых адресов
+
+
+
 
 
