@@ -197,6 +197,32 @@ SUDO
 
             смена режима для aa-enforce /user/bin/man 
                 перевели справочник в другую политику безопасности
-                
+
+
+IPROUTES
+
+    ip link  --  показывает сетевые устройства
+
+    ip link set {name (enp0s3)} down  --  оключить сетевую карту
+
+    ip link set {name (enp0s3)} up  --  включить сетевую карту
+
+    ip link set {name (enp0s3)} address {MAC address}  --  сменить MAC адрес сетевой карты
+                                                           только при отключенной карте
+
+    ip a add {ip-address} dev {name (enp0s3)} --  добавляем к устройству еще один адрес                                                      
+    ip a delete {ip-address}/{netmask} dev {name (enp0s3)} --  удаляем адрес
+                                                        первичные лучше не удалять
+                                                        воизбежание проблем
+
+    ip route show  --  показывает маршрут связи с миром )
+
+    ip route add default via {ip-address}  --  добавляем маргрут по умолчанию
+                                                сервер через который мы будем ходить 
+                                                дальше
+
+    ip route delete default  --  удаляем маргрут по умолчанию
+
+
 
 
