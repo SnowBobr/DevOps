@@ -173,7 +173,6 @@ SUDO
                         всех всех приложений или конкретных
                     
 
-
 БЕЗОПАСНОСТЬ
 
     политики безопасности: (пример на основе CentOS, RH)
@@ -224,5 +223,69 @@ IPROUTES
     ip route delete default  --  удаляем маргрут по умолчанию
 
 
+NETBOX
+    установка пакетов необходимых для NetBox
+        apt install sudo vim curl python 
+    postgresql 
+        затем постгрес стартануть и поставить автозагрузку
 
+        запускаем от пользователя который появляется при разворачивании субд 
+            sudo -u postgres psql 
+        создаем базу и пользователя (уже под пользователем субд)
+            CREATE DATABASE netbox;
+            CREATE USER netbox WITH PASSWORD '1111';
+        даем пользователю права доступа к будем
+            GRANT ALL PRIVILEGES ON DATABASE netbox TO netbox;
+
+        проверяем все ли работает, запрашивая соединение с бд от пользователя
+            psql --username netbox --password --host localhost netbox
+
+            если все окей, дальше будет видно что работаем от пользователя netbox
+            для проверки состояния подключения и вывода инфо команда:
+
+                /conninfo
+
+    REDIS  --  утсановка, субд
+
+        apt install redis-server
+
+        проверка работает лиЖ
+            redis-cli ping
+                ответ должен быть
+                    PONG
+
+    следующий набор обязательных пакетов
+    apt install
+        python3
+        python3-pip
+        python3-venv
+        python3-dev
+        build-essential
+        libxml2-dev
+        libxslt1-dev
+        libffi-dev
+        libpq-dev
+        libssl-dev
+        zlib1g-dev
+
+    Обязательно ставим git
+        apt install git
+
+
+    В официальной документации описано что необходимо создавать в 
+        каталоге opt подкаталог для netbox, но это ошибка
+        идем в корень и дальше каталог opt (/opt)
+        и туда заливаем то что нам необходимо
+
+        git clone -b master --depth 1 hhtps://github.com/netbox-community/netbox.git
+
+    создаем пользователя системы для netbox:
+        adduser --system --group netbox
+    даем ему права на папку:
+        chown -R netbox /opt/netbox/netbox/media
+
+    дальше работает с файлом конфигурации, предварительно его нужно скопировать, для сохранности
+        и работаем с копией: configuration.py
+
+        /opt/netbox/netbox/netbox/configuration_example.py
 
