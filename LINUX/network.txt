@@ -224,68 +224,109 @@ IPROUTES
 
 
 NETBOX
-    установка пакетов необходимых для NetBox
-        apt install sudo vim curl python 
-    postgresql 
-        затем постгрес стартануть и поставить автозагрузку
+    УСТАНОВКА
+        установка пакетов необходимых для NetBox
+            apt install sudo vim curl python 
+        postgresql 
+            затем постгрес стартануть и поставить автозагрузку
 
-        запускаем от пользователя который появляется при разворачивании субд 
-            sudo -u postgres psql 
-        создаем базу и пользователя (уже под пользователем субд)
-            CREATE DATABASE netbox;
-            CREATE USER netbox WITH PASSWORD '1111';
-        даем пользователю права доступа к будем
-            GRANT ALL PRIVILEGES ON DATABASE netbox TO netbox;
+            запускаем от пользователя который появляется при разворачивании субд 
+                sudo -u postgres psql 
+            создаем базу и пользователя (уже под пользователем субд)
+                CREATE DATABASE netbox;
+                CREATE USER netbox WITH PASSWORD '1111';
+            даем пользователю права доступа к будем
+                GRANT ALL PRIVILEGES ON DATABASE netbox TO netbox;
 
-        проверяем все ли работает, запрашивая соединение с бд от пользователя
-            psql --username netbox --password --host localhost netbox
+            проверяем все ли работает, запрашивая соединение с бд от пользователя
+                psql --username netbox --password --host localhost netbox
 
-            если все окей, дальше будет видно что работаем от пользователя netbox
-            для проверки состояния подключения и вывода инфо команда:
+                если все окей, дальше будет видно что работаем от пользователя netbox
+                для проверки состояния подключения и вывода инфо команда:
 
-                /conninfo
+                    /conninfo
+                
+                проверка прав доступа пользователя
+                    \dn+
 
-    REDIS  --  утсановка, субд
+                вывести все бд
+                    \l 
 
-        apt install redis-server
+                вывести всех пользователей 
+                    \du
 
-        проверка работает лиЖ
-            redis-cli ping
-                ответ должен быть
-                    PONG
+            могут возникнуть проблемы с правами доступа, решил кустарно
+            дал скрипту вход в субд вместо netbox суперпользователя - postgres
+            
 
-    следующий набор обязательных пакетов
-    apt install
-        python3
-        python3-pip
-        python3-venv
-        python3-dev
-        build-essential
-        libxml2-dev
-        libxslt1-dev
-        libffi-dev
-        libpq-dev
-        libssl-dev
-        zlib1g-dev
+        REDIS  --  утсановка, субд
 
-    Обязательно ставим git
-        apt install git
+            apt install redis-server
+
+            проверка работает лиЖ
+                redis-cli ping
+                    ответ должен быть
+                        PONG
+
+        следующий набор обязательных пакетов
+        apt install
+            python3
+            python3-pip
+            python3-venv
+            python3-dev
+            build-essential
+            libxml2-dev
+            libxslt1-dev
+            libffi-dev
+            libpq-dev
+            libssl-dev
+            zlib1g-dev
+
+        Обязательно ставим git
+            apt install git
 
 
-    В официальной документации описано что необходимо создавать в 
-        каталоге opt подкаталог для netbox, но это ошибка
-        идем в корень и дальше каталог opt (/opt)
-        и туда заливаем то что нам необходимо
+        В официальной документации описано что необходимо создавать в 
+            каталоге opt подкаталог для netbox, но это ошибка
+            идем в корень и дальше каталог opt (/opt)
+            и туда заливаем то что нам необходимо
 
-        git clone -b master --depth 1 hhtps://github.com/netbox-community/netbox.git
+            git clone -b master --depth 1 hhtps://github.com/netbox-community/netbox.git
 
-    создаем пользователя системы для netbox:
-        adduser --system --group netbox
-    даем ему права на папку:
-        chown -R netbox /opt/netbox/netbox/media
+        создаем пользователя системы для netbox:
+            adduser --system --group netbox
+        даем ему права на папку:
+            chown -R netbox /opt/netbox/netbox/media
 
-    дальше работает с файлом конфигурации, предварительно его нужно скопировать, для сохранности
-        и работаем с копией: configuration.py
+        дальше работает с файлом конфигурации, предварительно его нужно скопировать, для сохранности
+            и работаем с копией: configuration.py
 
-        /opt/netbox/netbox/netbox/configuration_example.py
+            /opt/netbox/netbox/netbox/configuration_example.py
 
+                ALLOWED_HOSTS = {IP}
+                DATABASE
+                    прописываем бд, пользователя, пароль
+                SECRET_KEY
+                    генерируем с помощью пайтон скрипта в каталоге на уровень выше
+                        generate_secret_key.py
+                    результат записываем в файл, файл копируем в каталог с конфой
+                    оттуда сплитом в виме открываем и добавляем в нужном месте ключ
+
+        обновление структуры, добавление связей ,заполнение бд и прочее
+        для этого запускаем скрипт (bash upgrade.sh) 
+        который находиться на два уровня выше
+
+        перезапускаем процессы systemctl daemon-reload
+
+        идем в /opt/netbox/venv/bin
+        и запускаем source activate  --  активируем виртуальное окружение
+
+        идем в /opt/netbox/netbox
+
+        создаем рута для нетбокса  --  python3 manage.py createsuperuser
+        
+        стартуем сервер в режиме разработчика  -- python3 manage.py runserver 0.0.0.0:800 --insecure
+        
+    НАСТРОЙКА 
+
+    
