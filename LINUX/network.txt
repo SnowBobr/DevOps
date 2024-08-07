@@ -224,6 +224,8 @@ IPROUTES
 
 
 NETBOX
+    позволяет вести всю документацию по сети предприятия, абсолютно всю
+
     УСТАНОВКА
         установка пакетов необходимых для NetBox
             apt install sudo vim curl python 
@@ -326,7 +328,42 @@ NETBOX
         создаем рута для нетбокса  --  python3 manage.py createsuperuser
         
         стартуем сервер в режиме разработчика  -- python3 manage.py runserver 0.0.0.0:800 --insecure
+
+
+    РАЗВОРАЧИВАНИЕ НА СЕРВЕРЕ ДЛЯ АВТОЗАПУСКА И работы
+
+        gunicorn
+            файлы кончигурации  --  /opt/netbox/contrib
+            на выбор разворачивание на nginx / apach
+            копируем файл gunicorn.py на уровень выше
+
+            устанавливаем netbox как сервис
+                переносим файлы
+                    cp -v *.service /etc/systemd/system
+
+            добавляем сервисы в автозагрузку и стартуем их
+
+                systemctl daemon-reload
+                systemctl start netbox netbox-rq
+                systemctl enable netbox netbox-rq
         
+        nginx
+            apt install -y nginx
+
+            ssl   --   это тестовое создание, в реальном случае ключи покупаются
+                openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/netbox.key -out /etc/ssl/certs/netbox.crt
+                заполняем требуемые поля, страна, город, и т.д.
+
+            копируем файл конфигурации cp /opt/netbox/contrib/nginx.conf /etc/nginx/sites-available/netbox
+            далее прописывем настройки:
+                server_name -- {IP}
+                создаем на него ссылку
+                    ln -s /etc/nginx/sites-available/netbox /etc/nginx/sites-enabled/netbox
+                рестартуем nginx   
+
+
     НАСТРОЙКА 
 
     
+
+
