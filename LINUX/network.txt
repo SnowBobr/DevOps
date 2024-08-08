@@ -416,4 +416,38 @@ POSTGRESQL move another part
         зайти проверить в оболочке постгрес где хранятся файлы бд
 
 
+POSTGRESQL
+    sudo -u postgres psql  --  вход в постгрес от имени пользователя postgres (только для рута)
+
+        просто переключиться на пользователя постгрес  --  sudo su postgres
+        запустить сеанс постгрес из под пользователя постгрес  --  psql
+
+
+    дальнейшее не корректно работает под 15 версией POSTGRESQL для пользователей кроме супера
+
+        CREATE DATABASE superheroes;  --  создание бд
+        CREATE USER heroadmin WITH PASSWORD 'qwerty';  --  создаем пользователя
+        GRANT ALL PRIVILEGES ON DATABASE superheroes TO heroadmin;  --  даем все права доступа на бд определенному пользователю
+
+        psql --username heroadmin --password --host localhost superheroes  --  входим от имени пользователя в бд
+        \conninfo  --  проверяемя к чему мы подключены
+
+        CREATE TABLE herolist (ID SERIAL PRIMARY KEY, Name CHARACTER VARYING (20), Surename CHARACTER VARYING (20), Age INTEGER);
+        
+        INSERT INTO herolist VALUES (1, 'Piter', 'Parker', 25)  --  добавляем запись 
+
+    ПЕРЕНОС БАЗЫ НА ДРУГОЙ СЕРВЕР С СОХРАНЕНИЕМ ЗАВИСИМОСТЕЙ, ПРАВ ДОСТУПА, ПРОЧЕГО
+
+        sudo su postgres  --  переключаемся на пользователя postgres
+        pg_dumpall >./backup.bak  --  создаем резервную копию бд в домашний каталог 
+            пользователя postgres 
+
+        на целевой машине должен быть уже установлен postgres и openssh_server
+
+        далее копируем на целевую машину бэкап
+            scp backup.bak test@10.0.2.20:/home/test 
+
+        восстанавливаем из бэкапа  --  psql -f backup.bak postgres
+        
+
 
