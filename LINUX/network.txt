@@ -450,4 +450,97 @@ POSTGRESQL
         восстанавливаем из бэкапа  --  psql -f backup.bak postgres
         
 
+BASH 
+
+    выполнение срипта:
+        простое ручное выполнение  --  bash script.sh
+        чтобы выполнять только по названию скрипта, файл нужно сделать выполняемым:
+            chmod +x script.sh 
+            выполнение будет выглядеть тогда вот так:
+                ./script.sh
+
+
+    первая страка указывает каким интерпритатором обрабатывать дальнейший код 
+    примеры:
+        #!/bin/bash
+
+    ПЕРЕМЕННЫЕ
+        бывают глобальные и локальные:
+            глобальнык:
+                $HOME  -  домашний каталог пользователя
+
+            локальные создаються внутри скрипта:
+                usr="Administrator"  --  текстовые в кавычках
+                level=100500  --  численные
+
+    обращение к переменным:
+        для обращение к переменным перед переменно ставиться символ "$"
+            echo "Home directoty: $HOME"
+        что бы экранировать символ обращения к переменным необходимо использовать слеш:
+            echo "Give me 1000 \$"
+
+    работа с численными переменными:
+        присваиваем переменным значения и суммируем их c помощью "let":
+            num1=10
+            num2=3
+            let sum=$num1+$num2
+
+    конкатинация строк (склеивание):
+            w1="Admin"
+            w2="Adminych"
+            words=$w1  $w2
+
+    IF ELSE ELIF
+        обычное ветвление, делаем проверку есть ли пользователь в файле пользователей хоста:
+            ключ --quiet  -- означает не выводить результат команды на консоль
+            if grep --quiet test /etc/passwd 
+            then
+                echo "user test found"
+            else
+                echo "user test not found"
+            fi
+
+        ветвление с множественными вариантами (сравнение чисел):
+            echo "Input the number"
+            read number
+            if (($number > 0)); then echo "Number is OK"
+            elif (($number < 0)): then echo "Number is NOT OK!"
+            else echo "numbers is full zero"
+            fi
+    
+        ветвление с множественными вариантами (проверка равенство):
+            mypath=`pwd`  ---   внимание команда в символах "`" который там где тильда
+            if [ $mypath = "/root" ]; then echo "You are in the Home directoty"
+            else echo "You are locate in the $mypath"
+            fi
+
+
+    получение данных от пользователя
+        echo "What is your name?"
+        read username
+        echo "Hi $username"
+
+    Работа с файлами и каталогами
+
+        проверка существует или указанный файл в текущем каталоге:
+            echo "Insert file name"
+            read filename
+            if [ -e $filename ]: then echo "File $filename is exist in this directory"
+            else
+                echo "File $filename dosnt exist in this directory"
+            fi
+
+        проверка существует ли каталог, команда sleep:
+
+            myhomedir=/root
+            if [ -d @myhomedir ]; then echo "Home directory of superuser is exist"
+            fi
+            sleep 1
+            echo "List all files in directory"
+            ls /root
+            sleep 1
+            echo "Cleaning!!!"
+            clean  ---  так эта команда не работает
+
+
 
